@@ -1,6 +1,8 @@
 import React from 'react';
 import { Layers, User as UserIcon, LogOut } from 'lucide-react';
 
+import CustomSelect from './CustomSelect';
+
 export default function Navbar({ 
   user, 
   title, 
@@ -21,20 +23,16 @@ export default function Navbar({
       <div className="header-controls">
         {/* Workspace Quick Selector */}
         {workspaces && workspaces.length > 0 && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-            <Layers size={16} style={{ color: 'var(--atlassian-blue)', flexShrink: 0 }} />
-            <select
-              className="workspace-select"
-              value={selectedWorkspaceId || ''}
-              onChange={(e) => setSelectedWorkspaceId(Number(e.target.value))}
-            >
-              {workspaces.map((w) => (
-                <option key={w.id} value={w.id}>
-                  Workspace: {w.name}
-                </option>
-              ))}
-            </select>
-          </div>
+          <CustomSelect
+            options={workspaces.map((w) => ({
+              value: w.id,
+              label: `Workspace: ${w.name}`,
+              icon: <Layers size={14} style={{ color: 'var(--atlassian-blue)' }} />
+            }))}
+            value={selectedWorkspaceId || ''}
+            onChange={(val) => setSelectedWorkspaceId(Number(val))}
+            style={{ minWidth: 180, maxWidth: 240 }}
+          />
         )}
 
         {/* Profile Avatar Button */}

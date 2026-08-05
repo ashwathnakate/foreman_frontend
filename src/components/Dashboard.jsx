@@ -6,6 +6,7 @@ import MembersManagement from './MembersManagement';
 import ConfirmModal from './ConfirmModal';
 import { useToast } from '../context/ToastContext';
 import { API_BASE_URL } from '../config/api';
+import CustomSelect from './CustomSelect';
 import {
   Layers,
   Briefcase,
@@ -21,7 +22,13 @@ import {
   Search,
   User as UserIcon,
   Sparkles,
-  Key
+  Key,
+  AlertCircle,
+  ArrowDown,
+  ArrowUp,
+  CheckCircle2,
+  Clock,
+  Circle
 } from 'lucide-react';
 
 export default function Dashboard({ token, onLogout, invitationInfo, onClearInvitation }) {
@@ -1294,29 +1301,29 @@ export default function Dashboard({ token, onLogout, invitationInfo, onClearInvi
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
                   <div className="form-group">
                     <label className="form-label">Priority</label>
-                    <select
-                      className="form-control"
+                    <CustomSelect
+                      options={[
+                        { value: 'LOW', label: 'LOW', icon: <ArrowDown size={14} style={{ color: '#5e6c84' }} /> },
+                        { value: 'MEDIUM', label: 'MEDIUM', icon: <AlertCircle size={14} style={{ color: '#ff8b00' }} /> },
+                        { value: 'HIGH', label: 'HIGH', icon: <ArrowUp size={14} style={{ color: '#bf2600' }} /> }
+                      ]}
                       value={taskForm.priority}
-                      onChange={(e) => setTaskForm({ ...taskForm, priority: e.target.value })}
+                      onChange={(val) => setTaskForm({ ...taskForm, priority: val })}
                       disabled={isDeveloper && !!editingTask}
-                    >
-                      <option value="LOW">LOW</option>
-                      <option value="MEDIUM">MEDIUM</option>
-                      <option value="HIGH">HIGH</option>
-                    </select>
+                    />
                   </div>
 
                   <div className="form-group">
                     <label className="form-label">Status</label>
-                    <select
-                      className="form-control"
+                    <CustomSelect
+                      options={[
+                        { value: 'TODO', label: 'TODO', icon: <Circle size={14} style={{ color: '#0747a6' }} /> },
+                        { value: 'IN_PROGRESS', label: 'IN_PROGRESS', icon: <Clock size={14} style={{ color: '#ff8b00' }} /> },
+                        { value: 'DONE', label: 'DONE', icon: <CheckCircle2 size={14} style={{ color: '#006644' }} /> }
+                      ]}
                       value={taskForm.status}
-                      onChange={(e) => setTaskForm({ ...taskForm, status: e.target.value })}
-                    >
-                      <option value="TODO">TODO</option>
-                      <option value="IN_PROGRESS">IN_PROGRESS</option>
-                      <option value="DONE">DONE</option>
-                    </select>
+                      onChange={(val) => setTaskForm({ ...taskForm, status: val })}
+                    />
                   </div>
                 </div>
 
@@ -1334,20 +1341,20 @@ export default function Dashboard({ token, onLogout, invitationInfo, onClearInvi
 
                 <div className="form-group">
                   <label className="form-label">Assignee</label>
-                  <select
-                    className="form-control"
+                  <CustomSelect
+                    options={[
+                      { value: '', label: 'Select Assignee', icon: <UserIcon size={14} style={{ color: '#5e6c84' }} /> },
+                      ...(projectMembers.length > 0 ? projectMembers : teamMembers).map((m) => ({
+                        value: m.id,
+                        label: `${m.firstName} ${m.lastName} (${m.email})`,
+                        icon: <UserIcon size={14} style={{ color: '#0052cc' }} />
+                      }))
+                    ]}
                     value={taskForm.userId}
-                    onChange={(e) => setTaskForm({ ...taskForm, userId: e.target.value })}
-                    required
+                    onChange={(val) => setTaskForm({ ...taskForm, userId: val })}
                     disabled={isDeveloper && !!editingTask}
-                  >
-                    <option value="">Select Assignee</option>
-                    {(projectMembers.length > 0 ? projectMembers : teamMembers).map((m) => (
-                      <option key={m.id} value={m.id}>
-                        {m.firstName} {m.lastName} ({m.email})
-                      </option>
-                    ))}
-                  </select>
+                    placeholder="Select Assignee"
+                  />
                 </div>
               </div>
 

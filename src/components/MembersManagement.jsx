@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Users, UserPlus, Shield, Trash2, Edit3, Loader2, Layers, Briefcase } from 'lucide-react';
+import { Users, UserPlus, Shield, ShieldCheck, Trash2, Edit3, Loader2, Layers, Briefcase } from 'lucide-react';
 import { useToast } from '../context/ToastContext';
+import CustomSelect from './CustomSelect';
+
+const projectRoleOptions = [
+  { value: 'PROJECT_MANAGER', label: 'PROJECT_MANAGER', icon: <ShieldCheck size={14} style={{ color: '#0052cc' }} /> },
+  { value: 'DEVELOPER', label: 'DEVELOPER', icon: <Briefcase size={14} style={{ color: '#5e6c84' }} /> }
+];
+
+const workspaceRoleOptions = [
+  { value: 'OWNER', label: 'OWNER', icon: <Shield size={14} style={{ color: '#ff8b00' }} /> },
+  { value: 'MEMBER', label: 'MEMBER', icon: <Users size={14} style={{ color: '#006644' }} /> }
+];
 
 export default function MembersManagement({
   authFetch,
@@ -234,14 +245,11 @@ export default function MembersManagement({
 
                     <div className="form-group">
                       <label className="form-label">Project Role</label>
-                      <select
-                        className="form-control"
+                      <CustomSelect
+                        options={projectRoleOptions}
                         value={projMemberForm.projectRole}
-                        onChange={(e) => setProjMemberForm({ ...projMemberForm, projectRole: e.target.value })}
-                      >
-                        <option value="PROJECT_MANAGER">PROJECT_MANAGER</option>
-                        <option value="DEVELOPER">DEVELOPER</option>
-                      </select>
+                        onChange={(val) => setProjMemberForm({ ...projMemberForm, projectRole: val })}
+                      />
                     </div>
 
                     <button type="submit" className="btn btn-primary btn-block">
@@ -253,7 +261,7 @@ export default function MembersManagement({
 
               {/* Members Table */}
               <div className="table-container">
-                <div style={{ padding: '12px 16px', backgroundColor: '#fafbfc', borderBottom: '1px solid var(--border-color)', fontWeight: 600, fontSize: 13 }}>
+                <div className="table-header-banner">
                   Assigned Members in Project #{selectedProjectId}
                 </div>
 
@@ -280,15 +288,12 @@ export default function MembersManagement({
                           <td style={{ color: 'var(--atlassian-blue)' }}>{m.email}</td>
                           <td>
                             {effectiveIsManager ? (
-                              <select
-                                className="form-control"
-                                style={{ padding: '2px 8px', fontSize: 12, height: 'auto', width: 'auto' }}
+                              <CustomSelect
+                                size="sm"
+                                options={projectRoleOptions}
                                 value={m.projectRole || 'DEVELOPER'}
-                                onChange={(e) => handleUpdateProjectMemberRole(m.email, e.target.value)}
-                              >
-                                <option value="PROJECT_MANAGER">PROJECT_MANAGER</option>
-                                <option value="DEVELOPER">DEVELOPER</option>
-                              </select>
+                                onChange={(val) => handleUpdateProjectMemberRole(m.email, val)}
+                              />
                             ) : (
                               <span className="badge badge-done">{m.projectRole || 'DEVELOPER'}</span>
                             )}
@@ -365,14 +370,11 @@ export default function MembersManagement({
 
                     <div className="form-group">
                       <label className="form-label">Workspace Role</label>
-                      <select
-                        className="form-control"
+                      <CustomSelect
+                        options={workspaceRoleOptions}
                         value={wsMemberForm.workspaceRole}
-                        onChange={(e) => setWsMemberForm({ ...wsMemberForm, workspaceRole: e.target.value })}
-                      >
-                        <option value="OWNER">OWNER</option>
-                        <option value="MEMBER">MEMBER</option>
-                      </select>
+                        onChange={(val) => setWsMemberForm({ ...wsMemberForm, workspaceRole: val })}
+                      />
                     </div>
 
                     <button type="submit" className="btn btn-primary btn-block">
@@ -384,7 +386,7 @@ export default function MembersManagement({
 
               {/* Workspace Members Table */}
               <div className="table-container">
-                <div style={{ padding: '12px 16px', backgroundColor: '#fafbfc', borderBottom: '1px solid var(--border-color)', fontWeight: 600, fontSize: 13 }}>
+                <div className="table-header-banner">
                   Workspace #{selectedWorkspaceId} Members
                 </div>
 
@@ -411,15 +413,12 @@ export default function MembersManagement({
                           <td style={{ color: 'var(--atlassian-blue)' }}>{m.email}</td>
                           <td>
                             {effectiveIsOwner ? (
-                              <select
-                                className="form-control"
-                                style={{ padding: '2px 8px', fontSize: 12, height: 'auto', width: 'auto' }}
+                              <CustomSelect
+                                size="sm"
+                                options={workspaceRoleOptions}
                                 value={m.workspaceRole || 'MEMBER'}
-                                onChange={(e) => handleUpdateWorkspaceMemberRole(m.email, e.target.value)}
-                              >
-                                <option value="OWNER">OWNER</option>
-                                <option value="MEMBER">MEMBER</option>
-                              </select>
+                                onChange={(val) => handleUpdateWorkspaceMemberRole(m.email, val)}
+                              />
                             ) : (
                               <span className="badge badge-done">{m.workspaceRole || 'MEMBER'}</span>
                             )}
