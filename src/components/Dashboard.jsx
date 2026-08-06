@@ -633,6 +633,9 @@ export default function Dashboard({ token, onLogout, invitationInfo, onClearInvi
     return matchesStatus && matchesSearch;
   });
 
+  const currentWorkspace = workspaces.find((w) => String(w.id) === String(selectedWorkspaceId));
+  const currentProject = projects.find((p) => String(p.id) === String(selectedProjectId));
+
   const getTabTitle = () => {
     switch (activeTab) {
       case 'overview': return 'Overview Dashboard';
@@ -867,7 +870,7 @@ export default function Dashboard({ token, onLogout, invitationInfo, onClearInvi
                 <div>
                   <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-primary)' }}>Projects</h2>
                   <p style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
-                    Workspace ID: <strong>#{selectedWorkspaceId || 'None'}</strong>
+                    Workspace: <strong>{currentWorkspace?.name || (selectedWorkspaceId ? `Workspace #${selectedWorkspaceId}` : 'None')}</strong>
                   </p>
                 </div>
                 <button onClick={handleOpenCreateProject} className="btn btn-primary">
@@ -959,7 +962,7 @@ export default function Dashboard({ token, onLogout, invitationInfo, onClearInvi
                 <div>
                   <h2 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-primary)' }}>Task Directory (List View)</h2>
                   <p style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
-                    Workspace #{selectedWorkspaceId || '?'} &rarr; Project #{selectedProjectId || '?'}
+                    {currentWorkspace?.name || (selectedWorkspaceId ? `Workspace #${selectedWorkspaceId}` : 'Workspace')} &rarr; {currentProject?.title || (selectedProjectId ? `Project #${selectedProjectId}` : 'Project')}
                   </p>
                 </div>
 

@@ -34,7 +34,16 @@ export default function Register({ onRegisterSuccess, switchToLogin }) {
     if (!formData.firstName.trim()) errors.firstName = 'First name cannot be empty';
     if (!formData.lastName.trim()) errors.lastName = 'Last name cannot be empty';
     if (!formData.email.trim()) errors.email = 'Email cannot be empty';
-    if (!formData.password) errors.password = 'Password cannot be empty';
+
+    if (!formData.password) {
+      errors.password = 'Password cannot be empty';
+    } else if (formData.password.length < 6) {
+      errors.password = 'Password must be at least 6 characters long';
+    } else if (!/[A-Z]/.test(formData.password)) {
+      errors.password = 'Password must contain at least one uppercase letter';
+    } else if (!/[^a-zA-Z0-9]/.test(formData.password)) {
+      errors.password = 'Password must contain at least one special character';
+    }
 
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
@@ -179,8 +188,12 @@ export default function Register({ onRegisterSuccess, switchToLogin }) {
                 onChange={handleChange}
                 required
               />
-              {fieldErrors.password && (
+              {fieldErrors.password ? (
                 <div className="form-error-text">{fieldErrors.password}</div>
+              ) : (
+                <div style={{ fontSize: 11, color: 'var(--text-secondary)', marginTop: 4 }}>
+                  Requires min. 6 characters, 1 uppercase letter, and 1 special character.
+                </div>
               )}
             </div>
 

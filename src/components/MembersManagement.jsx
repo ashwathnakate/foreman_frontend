@@ -52,6 +52,9 @@ export default function MembersManagement({
   const effectiveIsOwner = isOwner || currentWsMem?.workspaceRole === 'OWNER';
   const effectiveIsManager = isManager || effectiveIsOwner || currentProjMem?.projectRole === 'PROJECT_MANAGER';
 
+  const currentWorkspace = workspaces.find((w) => String(w.id) === String(selectedWorkspaceId));
+  const currentProject = projects.find((p) => String(p.id) === String(selectedProjectId));
+
   useEffect(() => {
     if (selectedWorkspaceId) {
       fetchWorkspaceMembers();
@@ -262,7 +265,7 @@ export default function MembersManagement({
               {/* Members Table */}
               <div className="table-container">
                 <div className="table-header-banner">
-                  Assigned Members in Project #{selectedProjectId}
+                  Assigned Members in Project: {currentProject?.title || (selectedProjectId ? `#${selectedProjectId}` : 'Selected Project')}
                 </div>
 
                 {loadingProjMembers ? (
@@ -387,7 +390,7 @@ export default function MembersManagement({
               {/* Workspace Members Table */}
               <div className="table-container">
                 <div className="table-header-banner">
-                  Workspace #{selectedWorkspaceId} Members
+                  {currentWorkspace?.name || (selectedWorkspaceId ? `Workspace #${selectedWorkspaceId}` : 'Workspace')} Members
                 </div>
 
                 {loadingWsMembers ? (
